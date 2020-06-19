@@ -1,0 +1,38 @@
+package com.xfeng.demo.controller.portal;
+
+import com.xfeng.demo.config.authz.CurrentUser;
+import com.xfeng.demo.model.dto.UserDTO;
+import com.xfeng.demo.model.entity.User;
+import com.xfeng.demo.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @author xuefeng.wang
+ * @date 2020-05-22
+ */
+
+@Api(description = "用户接口 ")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(value = "portal/user/v1")
+public class UserController {
+
+    private final UserService userService;
+
+    @ApiOperation(value = "新增用户")
+    @PostMapping
+    public ResponseEntity<User> insert(@CurrentUser UserDTO userDTO, @RequestBody User user) {
+        return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "修改用户")
+    @PutMapping
+    public ResponseEntity<User> edit(@CurrentUser UserDTO userDTO, @RequestBody User user) {
+        return new ResponseEntity<>(userService.editUser(user), HttpStatus.OK);
+    }
+}
