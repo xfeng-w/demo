@@ -1,0 +1,20 @@
+# ShiroJWT
+fastdep:
+  shiro-jwt:
+    filter: #shiro过滤规则
+      portal:
+        path: /portal/**
+        role: jwt # jwt为需要进行token校验
+      pages:
+        path: /pages/**/**
+        role: anon # anon为无需校验
+    secret: "6Dx8SIuaHXJYnpsG18SSpjPs50lZcT52" # jwt秘钥
+    expireTime: 7200000 # token有效期
+#    prefix: "Bearer "  # token校验时的前缀
+#    signPrefix: "Bearer " # token生成签名的前缀
+#    header: "Authorization" # token校验时的header头
+#    以下对应为shiro配置参数，无特殊需求无需配置
+#    loginUrl:
+#    successUrl:
+#    unauthorizedUrl:
+#    filterChainDefinitions:

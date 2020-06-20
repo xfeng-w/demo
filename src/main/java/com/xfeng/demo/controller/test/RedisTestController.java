@@ -1,5 +1,7 @@
 package com.xfeng.demo.controller.test;
 
+import com.xfeng.demo.annotation.CurrentUser;
+import com.xfeng.demo.model.dto.UserDTO;
 import com.xfeng.demo.service.RedisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,20 +24,20 @@ public class RedisTestController {
 
     @ApiOperation(value = "setKey")
     @GetMapping("set")
-    public ResponseEntity<Void> setKey(@RequestParam String key, @RequestParam String value) {
+    public ResponseEntity<Void> setKey(@CurrentUser UserDTO userDTO, @RequestParam String key, @RequestParam String value) {
         redisService.set(key, value);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value = "hasKey")
     @GetMapping("hasKey")
-    public ResponseEntity<Boolean> hasKey(@RequestParam String key) {
+    public ResponseEntity<Boolean> hasKey(@CurrentUser UserDTO userDTO, @RequestParam String key) {
         return new ResponseEntity<>(redisService.hasKey(key), HttpStatus.OK);
     }
 
     @ApiOperation(value = "delKey")
     @DeleteMapping("delKey")
-    public ResponseEntity<Boolean> deleteKey(@RequestParam String key) {
+    public ResponseEntity<Boolean> deleteKey(@CurrentUser UserDTO userDTO, @RequestParam String key) {
         return new ResponseEntity<>(redisService.delete(key), HttpStatus.OK);
     }
 }

@@ -1,6 +1,8 @@
 package com.xfeng.demo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfeng.demo.mapper.UserMapper;
+import com.xfeng.demo.model.dto.AccountDTO;
 import com.xfeng.demo.model.entity.User;
 import com.xfeng.demo.service.UserService;
 import com.xfeng.demo.util.JacksonUtils;
@@ -23,6 +25,11 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserMapper userMapper;
+
+    @Override
+    public User info(Long id) {
+        return userMapper.selectById(id);
+    }
 
     @Override
     public User insertUser(User user) {
@@ -49,5 +56,16 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(saveEntity);
         logger.info("修改用户：{}", JacksonUtils.write2JsonString(saveEntity));
         return saveEntity;
+    }
+
+    @Override
+    public User selectByAccount(AccountDTO account) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getAccount, account.getAccount());
+        User user = userMapper.selectOne(wrapper);
+        if (Objects.nonNull(user) && user.getPassword().equals(Md5SaltUtil.generateBySalt(account.getPassword(), user.getSalt()))) {
+            return user;
+        }
+        return null;
     }
 }
