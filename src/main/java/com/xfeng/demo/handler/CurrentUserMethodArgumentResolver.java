@@ -1,16 +1,17 @@
-package com.xfeng.demo.config.authz;
+package com.xfeng.demo.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.xfeng.demo.annotation.CurrentUser;
 import com.xfeng.demo.model.dto.UserDTO;
+import com.xfeng.demo.util.JacksonUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import java.net.URLDecoder;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * @author xuefeng.wang
@@ -24,9 +25,11 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        ObjectMapper mapper = Jackson2ObjectMapperBuilder.json().failOnUnknownProperties(false).featuresToDisable(new Object[]{SerializationFeature.WRITE_DATES_AS_TIMESTAMPS}).build();
-        CurrentUser currentUserAnnotation = methodParameter.getParameterAnnotation(CurrentUser.class);
-        String user = nativeWebRequest.getHeader(currentUserAnnotation.value());
-        return user != null ? mapper.readValue(URLDecoder.decode(user, "UTF-8"), UserDTO.class) : null;
+        DecodedJWT jwt = JWT.decode(SecurityUtils.getSubject().getPrincipal().toString());
+        UserDTO user = JacksonUtils.readJson2Entity(jwt.getSubject(), UserDTO.class);
+        if (user != null) {
+            return user;
+        }
+        throw new MissingServletRequestPartException("currentUser");
     }
 }

@@ -1,6 +1,6 @@
 package com.xfeng.demo.controller.portal;
 
-import com.xfeng.demo.config.authz.CurrentUser;
+import com.xfeng.demo.annotation.CurrentUser;
 import com.xfeng.demo.model.dto.UserDTO;
 import com.xfeng.demo.model.entity.User;
 import com.xfeng.demo.service.UserService;

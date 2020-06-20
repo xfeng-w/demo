@@ -1,4 +1,4 @@
-package com.xfeng.demo.config.authz;
+package com.xfeng.demo.annotation;
 
 import java.lang.annotation.*;
 
