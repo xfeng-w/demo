@@ -7,6 +7,7 @@ import com.xfeng.demo.model.dto.UserDTO;
 import com.xfeng.demo.util.JacksonUtils;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -20,7 +21,8 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.hasParameterAnnotation(CurrentUser.class);
+        return methodParameter.getParameterType().isAssignableFrom(UserDTO.class)
+                && methodParameter.hasParameterAnnotation(CurrentUser.class);
     }
 
     @Override
