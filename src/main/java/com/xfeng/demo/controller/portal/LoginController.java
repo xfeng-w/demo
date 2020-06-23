@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +24,7 @@ import java.util.Objects;
  * @date 2020-06-20
  */
 @RestController
-@RequestMapping("pages")
+@RequestMapping("login")
 @RequiredArgsConstructor
 public class LoginController {
 
@@ -46,5 +43,11 @@ public class LoginController {
         String token = jwtUtils.sign(JacksonUtils.write2JsonString(userDto));
         CookieUtils.setCookie(request, response, "token", token);
         return new ResponseEntity<>(token, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtils.deleteCookie(request,response,"token");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
