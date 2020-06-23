@@ -9,7 +9,7 @@ import java.util.Random;
  * @author xuefeng.wang
  * @date 2020-05-27
  */
-public class Md5SaltUtil {
+public class Md5SaltUtils {
 
     private static int STEP = 3;
     private static int CAPACITY = 48;
