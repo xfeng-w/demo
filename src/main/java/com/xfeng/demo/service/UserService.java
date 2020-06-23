@@ -3,6 +3,8 @@ package com.xfeng.demo.service;
 import com.xfeng.demo.model.dto.AccountDTO;
 import com.xfeng.demo.model.entity.User;
 
+import java.util.Set;
+
 /**
  * @author xuefeng.wang
  * @date 2020-05-21
@@ -40,5 +42,13 @@ public interface UserService {
      * @return
      */
     User selectByAccount(AccountDTO account);
+
+    /**
+     * 查询权限
+     *
+     * @param userId userId
+     * @return
+     */
+    Set<String> selectPermissions(Long userId);
 
 }

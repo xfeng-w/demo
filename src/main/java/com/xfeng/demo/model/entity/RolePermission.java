@@ -1,4 +1,4 @@
-package com.xfeng.demo.model.entity.base;
+package com.xfeng.demo.model.entity;
 
 import lombok.Data;
 

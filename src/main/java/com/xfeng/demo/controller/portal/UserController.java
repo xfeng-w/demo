@@ -7,6 +7,8 @@ import com.xfeng.demo.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.shiro.authz.annotation.RequiresGuest;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +28,14 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping
+    @RequiresPermissions("user:add")
     public ResponseEntity<User> insert(@CurrentUser UserDTO userDTO, @RequestBody User user) {
         return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
     }
 
     @ApiOperation(value = "修改用户")
     @PutMapping
+    @RequiresPermissions("user:edit")
     public ResponseEntity<User> edit(@CurrentUser UserDTO userDTO, @RequestBody User user) {
         return new ResponseEntity<>(userService.editUser(user), HttpStatus.OK);
     }

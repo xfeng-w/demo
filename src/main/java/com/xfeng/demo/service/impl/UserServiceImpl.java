@@ -4,15 +4,20 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xfeng.demo.mapper.UserMapper;
 import com.xfeng.demo.model.dto.AccountDTO;
 import com.xfeng.demo.model.entity.User;
+import com.xfeng.demo.service.PermissionService;
+import com.xfeng.demo.service.RolePermissionService;
+import com.xfeng.demo.service.UserRoleService;
 import com.xfeng.demo.service.UserService;
 import com.xfeng.demo.util.JacksonUtils;
 import com.xfeng.demo.util.Md5SaltUtil;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author xuefeng.wang
@@ -26,9 +31,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final UserRoleService userRoleService;
+
+    private final RolePermissionService rolePermissionService;
+
+    private final PermissionService permissionService;
+
     @Override
     public User info(Long id) {
-        return userMapper.selectById(id);
+        User user = userMapper.selectById(id);
+        if (Objects.nonNull(user)) {
+            Set<Long> roleIds = userRoleService.selectRoleIdsByUserId(id);
+            user.setRoleIds(roleIds);
+        }
+        return user;
     }
 
     @Override
@@ -65,6 +81,18 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectOne(wrapper);
         if (Objects.nonNull(user) && user.getPassword().equals(Md5SaltUtil.generateBySalt(account.getPassword(), user.getSalt()))) {
             return user;
+        }
+        return null;
+    }
+
+    @Override
+    public Set<String> selectPermissions(Long userId) {
+        User user = this.info(userId);
+        if (Objects.nonNull(user) && CollectionUtils.isNotEmpty(user.getRoleIds())) {
+            Set<Long> permissionIds = rolePermissionService.selectByRoleIds(user.getRoleIds());
+            if (CollectionUtils.isNotEmpty(permissionIds)) {
+                return permissionService.selectByIds(permissionIds);
+            }
         }
         return null;
     }
