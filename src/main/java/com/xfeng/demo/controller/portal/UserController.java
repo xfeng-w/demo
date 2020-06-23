@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(description = "用户接口 ")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "portal/user/v1")
+@RequestMapping(value = "portal/user")
 public class UserController {
 
     private final UserService userService;
@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping
     @ApiOperation(value = "分页查询用户")
     @RequiresPermissions("user.view")
-    public ResponseEntity<IPage<User>> page(@CurrentUser UserDTO userDTO, @RequestParam String word, Pageable pageable) {
+    public ResponseEntity<IPage<User>> page(@CurrentUser UserDTO userDTO, @RequestParam(required = false) String word, Pageable pageable) {
         return new ResponseEntity<>(userService.page(word, pageable), HttpStatus.OK);
     }
 
@@ -41,15 +41,15 @@ public class UserController {
         return new ResponseEntity<>(userService.info(id), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "新增用户")
     @PostMapping
+    @ApiOperation(value = "新增用户")
     @RequiresPermissions("user.add")
     public ResponseEntity<User> insert(@CurrentUser UserDTO userDTO, @RequestBody User user) {
         return new ResponseEntity<>(userService.insertUser(user), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "修改用户")
     @PutMapping
+    @ApiOperation(value = "修改用户")
     @RequiresPermissions("user.edit")
     public ResponseEntity<User> edit(@CurrentUser UserDTO userDTO, @RequestBody User user) {
         return new ResponseEntity<>(userService.editUser(user), HttpStatus.OK);

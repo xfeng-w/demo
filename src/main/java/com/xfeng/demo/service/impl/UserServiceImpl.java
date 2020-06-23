@@ -6,19 +6,22 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xfeng.demo.mapper.UserMapper;
 import com.xfeng.demo.model.dto.AccountDTO;
 import com.xfeng.demo.model.entity.User;
+import com.xfeng.demo.model.entity.UserRole;
 import com.xfeng.demo.service.PermissionService;
 import com.xfeng.demo.service.RolePermissionService;
 import com.xfeng.demo.service.UserRoleService;
 import com.xfeng.demo.service.UserService;
-import com.xfeng.demo.util.JacksonUtils;
 import com.xfeng.demo.util.Md5SaltUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,7 +47,9 @@ public class UserServiceImpl implements UserService {
     public IPage<User> page(String word, Pageable pageable) {
         Page<User> page = new Page<>(pageable.getPageNumber(), pageable.getPageSize());
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(User::getAccount, word);
+        if (StringUtils.isNotBlank(word)) {
+            queryWrapper.like(User::getAccount, word);
+        }
         return userMapper.selectPage(page, queryWrapper);
     }
 
@@ -67,7 +72,9 @@ public class UserServiceImpl implements UserService {
         saveEntity.setSalt(salt);
         saveEntity.setPassword(Md5SaltUtils.generateBySalt(user.getPassword(), salt));
         userMapper.insert(saveEntity);
-        logger.info("新增用户：{}", JacksonUtils.write2JsonString(saveEntity));
+        if (CollectionUtils.isNotEmpty(user.getRoleIds())) {
+            this.saveRoles(saveEntity.getId(),user.getRoleIds());
+        }
         return saveEntity;
     }
 
@@ -81,7 +88,10 @@ public class UserServiceImpl implements UserService {
         saveEntity.setName(user.getName());
         saveEntity.setPassword(Md5SaltUtils.generateBySalt(user.getPassword(), saveEntity.getSalt()));
         userMapper.updateById(saveEntity);
-        logger.info("修改用户：{}", JacksonUtils.write2JsonString(saveEntity));
+        if (CollectionUtils.isNotEmpty(user.getRoleIds())) {
+            userRoleService.deleteByUserId(user.getId());
+            this.saveRoles(saveEntity.getId(),user.getRoleIds());
+        }
         return saveEntity;
     }
 
@@ -111,5 +121,22 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
+    }
+
+    /**
+     * 保存用户角色信息
+     *
+     * @param userId  用户Id
+     * @param roleIds 角色Id集合
+     */
+    private void saveRoles(Long userId, Set<Long> roleIds) {
+        List<UserRole> userRoles = new ArrayList<>();
+        roleIds.forEach(item -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(item);
+            userRoles.add(userRole);
+        });
+        userRoleService.savBatch(userRoles);
     }
 }

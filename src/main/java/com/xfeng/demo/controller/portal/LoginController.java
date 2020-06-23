@@ -9,6 +9,7 @@ import com.xfeng.demo.service.UserService;
 import com.xfeng.demo.util.CookieUtils;
 import com.xfeng.demo.util.JacksonUtils;
 import com.xfeng.demo.util.JwtUtils;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("login")
+@Api(description = "用户登陆接口 ")
 @RequiredArgsConstructor
 public class LoginController {
 

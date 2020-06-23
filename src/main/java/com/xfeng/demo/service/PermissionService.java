@@ -1,5 +1,7 @@
 package com.xfeng.demo.service;
 
+import com.xfeng.demo.model.entity.Permission;
+
 import java.util.Set;
 
 /**
@@ -15,4 +17,20 @@ public interface PermissionService {
      * @return
      */
     Set<String> selectByIds(Set<Long> ids);
+
+    /**
+     * 新增权限
+     *
+     * @param permission
+     * @return
+     */
+    Permission insert(Permission permission);
+
+    /**
+     * 修改权限
+     *
+     * @param permission
+     * @return
+     */
+    Permission update(Permission permission);
 }
