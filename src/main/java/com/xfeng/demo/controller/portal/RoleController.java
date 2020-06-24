@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(description = "角色用户接口 ")
+@Api(description = "角色接口 ")
 @RequestMapping("portal/role")
 public class RoleController {
 
