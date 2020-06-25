@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(description = "权限接口 ")
+@Api("权限接口 ")
 @RequestMapping("portal/permission")
 public class PermissionController {
 

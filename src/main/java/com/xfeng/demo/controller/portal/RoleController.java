@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequiredArgsConstructor
-@Api(description = "角色接口 ")
+@Api("角色接口 ")
 @RequestMapping("portal/role")
 public class RoleController {
 
@@ -36,14 +36,14 @@ public class RoleController {
     @PostMapping
     @ApiOperation(value = "新增角色")
     @RequiresPermissions("role.add")
-    public ResponseEntity<Role> insert(@CurrentUser UserDTO userDTO, Role role) {
+    public ResponseEntity<Role> insert(@CurrentUser UserDTO userDTO, @RequestBody Role role) {
         return new ResponseEntity<>(roleService.insert(role), HttpStatus.OK);
     }
 
     @PutMapping
     @ApiOperation(value = "修改角色")
     @RequiresPermissions("role.edit")
-    public ResponseEntity<Role> edit(@CurrentUser UserDTO userDTO, Role role) {
+    public ResponseEntity<Role> edit(@CurrentUser UserDTO userDTO, @RequestBody Role role) {
         return new ResponseEntity<>(roleService.edit(role), HttpStatus.OK);
     }
 

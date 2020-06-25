@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("login")
-@Api(description = "用户登陆接口 ")
+@Api("用户登陆接口 ")
 @RequiredArgsConstructor
 public class LoginController {
 
