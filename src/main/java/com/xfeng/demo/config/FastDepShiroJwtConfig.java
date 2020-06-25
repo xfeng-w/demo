@@ -21,10 +21,10 @@ public class FastDepShiroJwtConfig extends FastDepShiroJwtAuthorization {
     private final UserService userService;
 
     @Override
-    public SimpleAuthorizationInfo getAuthorizationInfo(String userId) {
-        UserDTO user = JacksonUtils.readJson2Entity(userId, UserDTO.class);
+    public SimpleAuthorizationInfo getAuthorizationInfo(String user) {
+        UserDTO userDTO = JacksonUtils.readJson2Entity(user, UserDTO.class);
         // 查询该用户下的所有权限
-        Set<String> collect = userService.selectPermissions(user.getId());
+        Set<String> collect = userService.selectPermissions(userDTO.getId());
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         // 添加用户权限到SimpleAuthorizationInfo中
         simpleAuthorizationInfo.addStringPermissions(collect);
