@@ -26,7 +26,7 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping("login")
-@Api("用户登陆接口 ")
+@Api(description = "用户登陆接口")
 @RequiredArgsConstructor
 public class LoginController {
 
@@ -49,7 +49,7 @@ public class LoginController {
 
     @DeleteMapping
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
-        CookieUtils.deleteCookie(request,response,"token");
+        CookieUtils.deleteCookie(request, response, "token");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

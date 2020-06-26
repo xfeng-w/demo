@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2020-05-22
  */
 
-@Api("用户接口 ")
+@Api(description = "用户接口 ")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "portal/user")

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author xuefeng.wang
  * @date 2020-06-03
  */
-@Api("Redis测试接口 ")
+@Api(description = "Redis测试接口 ")
 @RequestMapping("test/redis/v1")
 @RestController
 @RequiredArgsConstructor

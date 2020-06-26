@@ -1,7 +1,12 @@
 package com.xfeng.demo.handler;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.xfeng.demo.model.dto.UserDTO;
+import com.xfeng.demo.util.JacksonUtils;
 import org.apache.ibatis.reflection.MetaObject;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -21,6 +26,12 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
+        DecodedJWT jwt = JWT.decode(SecurityUtils.getSubject().getPrincipal().toString());
+        UserDTO user = JacksonUtils.readJson2Entity(jwt.getSubject(), UserDTO.class);
+        if (user != null) {
+            this.setFieldValByName(CREATED_BY, user.getId(), metaObject);
+            this.setFieldValByName(UPDATED_BY, user.getId(),metaObject);
+        }
         Date date = new Date();
         this.setFieldValByName(CREATED_TIME, date, metaObject);
         this.setFieldValByName(UPDATED_TIME, date, metaObject);
@@ -30,6 +41,12 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
+        DecodedJWT jwt = JWT.decode(SecurityUtils.getSubject().getPrincipal().toString());
+        UserDTO user = JacksonUtils.readJson2Entity(jwt.getSubject(), UserDTO.class);
+        if (user != null) {
+            this.setFieldValByName(CREATED_BY, user.getId(), metaObject);
+            this.setFieldValByName(UPDATED_BY, user.getId(),metaObject);
+        }
         Date date = new Date();
         this.setFieldValByName(UPDATED_TIME, date, metaObject);
     }
