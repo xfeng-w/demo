@@ -16,6 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class DemoApplication {
 
+    //conflict test
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
