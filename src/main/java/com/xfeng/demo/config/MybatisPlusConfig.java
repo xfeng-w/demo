@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParser
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Properties;
+
 /**
  * @author xuefeng.wang
  * @date 2020-06-17
@@ -26,6 +28,10 @@ public class MybatisPlusConfig {
         // paginationInterceptor.setLimit(500);
         // 开启 count 的 join 优化,只针对部分 left join
         paginationInterceptor.setCountSqlParser(new JsqlParserCountOptimize(true));
+        Properties prop = new Properties();
+        prop.setProperty("dialectType","MySql");
+        prop.setProperty("dialectClazz","com.xfeng.demo.config.BigRecordMySqlDialect");
+        paginationInterceptor.setProperties(prop);
         return paginationInterceptor;
     }
 }
