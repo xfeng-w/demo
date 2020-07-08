@@ -1,7 +1,7 @@
 spring:
   cloud:
     config:
-      uri: http://localhost:8090/
+      uri: http://140.143.33.132:8888/
       name: application-demo
       profile: test
       label: master
