@@ -5,3 +5,5 @@ spring:
       name: application-demo
       profile: test
       label: master
+      username: user
+      password: admin
