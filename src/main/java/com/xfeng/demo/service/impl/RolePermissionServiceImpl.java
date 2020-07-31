@@ -7,6 +7,8 @@ import com.xfeng.demo.model.entity.RolePermission;
 import com.xfeng.demo.service.RolePermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -27,6 +29,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
     }
 
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public List<RolePermission> saveBatch(List<RolePermission> rolePermissions) {
         super.saveBatch(rolePermissions);
         return rolePermissions;

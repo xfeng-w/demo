@@ -14,6 +14,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import java.util.Objects;
+
 /**
  * @author xuefeng.wang
  * @date 2020-06-01
@@ -27,8 +29,14 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
-        DecodedJWT jwt = JWT.decode(SecurityUtils.getSubject().getPrincipal().toString());
-        UserDTO user = JacksonUtils.readJson2Entity(jwt.getSubject(), UserDTO.class);
+        DecodedJWT jwt = null;
+        if (Objects.nonNull(SecurityUtils.getSubject().getPrincipal())) {
+            jwt = JWT.decode(SecurityUtils.getSubject().getPrincipal().toString());
+        }
+        UserDTO user = null;
+        if (Objects.nonNull(jwt)) {
+            user = JacksonUtils.readJson2Entity(jwt.getSubject(), UserDTO.class);
+        }
         if (user != null) {
             return user;
         }
